@@ -1,0 +1,66 @@
+### Subject: General idea on the workflow, Date: May 17, 2020
+
+## rpc-make design
+
+Function: rpc-make datum
+
+Example:
+```
+(rpc-start)
+
+(let lp ((x 10))
+  (rpc-make `(foo ,x))
+
+  (if (positive? message)
+    (lp (- x 1))
+    message))
+
+(rpc-finalize)
+```
+
+1. if not master, run task in background accepting messages, blocking execution
+for workers
+2. when master calls, rpc-make, master sends message to workers that
+calls the function make-rpc-gather with nil parameter
+3. when master calls finalize, master sends message to workers to call finalize
+there and then exit
+4. definitions made before rpc-start are accessible.
+
+## rpc-apply design
+
+Function: rpc-apply-bcast proc arg1 ...
+
+Apply proc over the given arguments on each processes and return the list containing
+the results of each computation to the parent process. Arguments are to be broadcasted
+to processes.
+
+Function: rpc-apply-scatter proc lst1 ...
+
+Apply proc over the given arguments on each processes and return the list containing
+the results of each computation to the parent process. Arguments are to be list of
+values whose length must be equal to the number of processes. Each individual
+element is to be scattered across the processes.
+
+## Stream design
+
+Function: rpc-stream-for-each proc stream1 stream2 …
+Fetches the elements from streams coming from all processes including the master
+process and calls the proc on the master process. Execution stops when it reaches
+the end of the shortest stream. Nothing is returned from the method.
+
+
+Function: rpc-stream-map proc stream1 stream2 …
+Similar to the rpc-stream-for-each function, except this function returns a list
+of values computed in the proc at each iteration.
+
+
+Function: rpc-stream-fold proc init stream1 stream2 …
+"Apply proc successively over the elements of the given `remote` streams, from
+first to last until the end of the shortest stream is reached. Return the
+result from the last proc call.
+
+Each call is (proc elem1 elem2 … prev), where each elem is from the corresponding
+stream. prev is the return from the previous proc call, or the given init for
+the first call."
+
+Design question: how to support early abort?

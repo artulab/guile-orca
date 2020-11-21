@@ -1,0 +1,4 @@
+#!/bin/sh
+
+export ACLOCAL_PATH=/usr/share/aclocal
+autoreconf -vif
