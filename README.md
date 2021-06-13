@@ -58,6 +58,6 @@ See `examples` directory for more examples.
 This project is licensed under the GNU Lesser General Public License - see
 the COPYING.LESSER file for details.
 
-Please send comments on orca to **ahmetartu at gmail dot com**
+Please send comments on orca to **ahmet@artulab.com**
 
 Copyright (C) 2020  Ahmet Artu Yildirim

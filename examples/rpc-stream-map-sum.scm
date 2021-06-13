@@ -20,6 +20,8 @@
 (define counter 0)
 
 (define (sum-all return a b)
+ (format #t "a: ~a b: ~a~%" a b)
+
  (set! counter (1+ counter))
  (if (> counter 4)
   (return)
